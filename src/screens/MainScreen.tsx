@@ -22,9 +22,9 @@ export default function MainScreen() {
     refresh();
   }, [refresh]);
 
-  const handleTakeConfirm = async (actualTime: string) => {
+  const handleTakeConfirm = async (actualTime: string, takenTimestamp?: number) => {
     if (!takeTarget) return;
-    await markTaken(takeTarget, actualTime);
+    await markTaken(takeTarget, actualTime, takenTimestamp);
     setTakeTarget(null);
   };
 

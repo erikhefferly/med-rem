@@ -74,7 +74,7 @@ export default function AuditScreen() {
                 <span className="audit-name">{entry.medicineName}</span>
                 <span className="audit-date">
                   {entry.takeTime
-                    ? `${formatDateOnly(entry.recordedAt)}, ${format12Hour(entry.takeTime)}`
+                    ? `${formatDateOnly(entry.takeTimestamp)}, ${format12Hour(entry.takeTime)}`
                     : formatDate(entry.recordedAt)}
                 </span>
               </div>

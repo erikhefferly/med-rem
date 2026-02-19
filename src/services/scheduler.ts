@@ -49,14 +49,15 @@ export async function refreshUpcomings(): Promise<void> {
 
 export async function markTaken(
   upcoming: Upcoming,
-  actualTime: string
+  actualTime: string,
+  takenTimestamp?: number
 ): Promise<void> {
   await db.transaction('rw', db.upcomings, db.auditTrail, async () => {
     await db.auditTrail.add({
       medicineId: upcoming.medicineId,
       medicineName: upcoming.medicineName,
       takeTime: actualTime,
-      takeTimestamp: upcoming.takeTimestamp,
+      takeTimestamp: takenTimestamp ?? upcoming.takeTimestamp,
       status: 'TAKEN',
       recordedAt: Date.now(),
     });

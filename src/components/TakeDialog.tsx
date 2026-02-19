@@ -4,7 +4,7 @@ import { format12Hour } from '../types';
 interface TakeDialogProps {
   medicineName: string;
   scheduledTime: string;
-  onConfirm: (actualTime: string) => void;
+  onConfirm: (actualTime: string, takenTimestamp?: number) => void;
   onCancel: () => void;
 }
 
@@ -19,7 +19,7 @@ export default function TakeDialog({
   const handleJustTook = () => {
     const now = new Date();
     const currentTime = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
-    onConfirm(currentTime);
+    onConfirm(currentTime, now.getTime());
   };
 
   return (
