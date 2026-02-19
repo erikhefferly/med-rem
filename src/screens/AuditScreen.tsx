@@ -1,30 +1,40 @@
 import { useState } from 'react';
 import { useLiveQuery } from 'dexie-react-hooks';
 import { db } from '../db';
+import { format12Hour } from '../types';
 
 export default function AuditScreen() {
   const [filterMedicineId, setFilterMedicineId] = useState<number | null>(null);
 
   const medicines = useLiveQuery(() => db.medicines.toArray());
 
-  const auditEntries = useLiveQuery(() => {
-    let query = db.auditTrail.orderBy('recordedAt').reverse();
+  const auditEntries = useLiveQuery(async () => {
+    let entries;
     if (filterMedicineId !== null) {
-      return db.auditTrail
+      entries = await db.auditTrail
         .where('medicineId')
         .equals(filterMedicineId)
-        .reverse()
-        .sortBy('recordedAt');
+        .toArray();
+    } else {
+      entries = await db.auditTrail.toArray();
     }
-    return query.toArray();
+    return entries.sort((a, b) => b.recordedAt - a.recordedAt);
   }, [filterMedicineId]);
 
   const formatDate = (ts: number) => {
     return new Date(ts).toLocaleString([], {
       month: 'short',
       day: 'numeric',
-      hour: '2-digit',
+      hour: 'numeric',
       minute: '2-digit',
+      hour12: true,
+    });
+  };
+
+  const formatDateOnly = (ts: number) => {
+    return new Date(ts).toLocaleString([], {
+      month: 'short',
+      day: 'numeric',
     });
   };
 
@@ -63,11 +73,13 @@ export default function AuditScreen() {
               <div className="audit-info">
                 <span className="audit-name">{entry.medicineName}</span>
                 <span className="audit-date">
-                  {formatDate(entry.recordedAt)}
+                  {entry.takeTime
+                    ? `${formatDateOnly(entry.recordedAt)}, ${format12Hour(entry.takeTime)}`
+                    : formatDate(entry.recordedAt)}
                 </span>
               </div>
               <span
-                className={`audit-status ${entry.status === 'TAKEN' ? 'status-taken' : 'status-deleted'}`}
+                className={`audit-status status-${entry.status.toLowerCase()}`}
               >
                 {entry.status}
               </span>

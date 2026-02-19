@@ -46,6 +46,14 @@ export default function MedicineForm() {
       await db.medicines.update(medId, data);
     } else {
       medId = await db.medicines.add(data);
+      await db.auditTrail.add({
+        medicineId: medId,
+        medicineName: data.name,
+        takeTime: '',
+        takeTimestamp: 0,
+        status: 'ADDED',
+        recordedAt: Date.now(),
+      });
     }
 
     await refreshUpcomings();

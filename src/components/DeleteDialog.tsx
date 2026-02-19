@@ -1,3 +1,5 @@
+import { format12Hour } from '../types';
+
 interface DeleteDialogProps {
   medicineName: string;
   scheduledTime: string;
@@ -16,7 +18,7 @@ export default function DeleteDialog({
       <div className="dialog" onClick={(e) => e.stopPropagation()}>
         <h2>Skip Reminder</h2>
         <p className="dialog-med-name">{medicineName}</p>
-        <p className="dialog-scheduled">Scheduled: {scheduledTime}</p>
+        <p className="dialog-scheduled">Scheduled: {format12Hour(scheduledTime)}</p>
         <p>Skip this upcoming reminder? It will be logged in your history.</p>
         <div className="dialog-buttons">
           <button className="btn btn-cancel" onClick={onCancel}>

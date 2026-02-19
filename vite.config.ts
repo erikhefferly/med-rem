@@ -3,7 +3,7 @@ import react from '@vitejs/plugin-react';
 import { VitePWA } from 'vite-plugin-pwa';
 
 export default defineConfig({
-  base: '/medicine-reminder/',
+  base: '/med-rem/',
   plugins: [
     react(),
     VitePWA({
@@ -17,8 +17,8 @@ export default defineConfig({
         background_color: '#f5f5f5',
         display: 'standalone',
         orientation: 'portrait',
-        scope: '/medicine-reminder/',
-        start_url: '/medicine-reminder/',
+        scope: '/med-rem/',
+        start_url: '/med-rem/',
         icons: [
           {
             src: 'pwa-192x192.svg',

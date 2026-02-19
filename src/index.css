@@ -437,9 +437,19 @@ body {
   color: #2e7d32;
 }
 
-.status-deleted {
+.status-skipped {
   background: #fde8e8;
   color: #c62828;
+}
+
+.status-added {
+  background: #e3f2fd;
+  color: #1565c0;
+}
+
+.status-removed {
+  background: #fff3e0;
+  color: #e65100;
 }
 
 /* ---- SETTINGS ---- */

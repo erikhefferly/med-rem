@@ -44,7 +44,7 @@ export default function MainScreen() {
     if (d.toDateString() === today.toDateString()) dayLabel = 'Today';
     else if (d.toDateString() === tomorrow.toDateString()) dayLabel = 'Tomorrow';
 
-    return `${dayLabel} at ${d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
+    return `${dayLabel} at ${d.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit', hour12: true })}`;
   };
 
   const isOverdue = (ts: number) => ts < Date.now();

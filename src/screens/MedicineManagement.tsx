@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { db } from '../db';
 import { refreshUpcomings } from '../services/scheduler';
 import { cancelNotificationsForMedicine } from '../services/notifications';
+import { format12Hour } from '../types';
 
 export default function MedicineManagement() {
   const medicines = useLiveQuery(() => db.medicines.toArray());
@@ -15,12 +16,20 @@ export default function MedicineManagement() {
     if (!confirmed) return;
 
     cancelNotificationsForMedicine(id);
+    await db.auditTrail.add({
+      medicineId: id,
+      medicineName: name,
+      takeTime: '',
+      takeTimestamp: 0,
+      status: 'REMOVED',
+      recordedAt: Date.now(),
+    });
     await db.medicines.delete(id);
     await refreshUpcomings();
   };
 
   const formatTimes = (t1: string, t2?: string, t3?: string) => {
-    return [t1, t2, t3].filter(Boolean).join(', ');
+    return [t1, t2, t3].filter((t): t is string => !!t).map(format12Hour).join(', ');
   };
 
   return (

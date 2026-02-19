@@ -51,18 +51,14 @@ export async function markTaken(
   upcoming: Upcoming,
   actualTime: string
 ): Promise<void> {
-  const [hours, minutes] = actualTime.split(':').map(Number);
-  const takenAt = new Date();
-  takenAt.setHours(hours!, minutes!, 0, 0);
-
   await db.transaction('rw', db.upcomings, db.auditTrail, async () => {
     await db.auditTrail.add({
       medicineId: upcoming.medicineId,
       medicineName: upcoming.medicineName,
-      takeTime: upcoming.takeTime,
+      takeTime: actualTime,
       takeTimestamp: upcoming.takeTimestamp,
       status: 'TAKEN',
-      recordedAt: takenAt.getTime(),
+      recordedAt: Date.now(),
     });
     await db.upcomings.delete(upcoming.id!);
   });

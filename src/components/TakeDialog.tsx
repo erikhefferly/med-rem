@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { format12Hour } from '../types';
 
 interface TakeDialogProps {
   medicineName: string;
@@ -13,16 +14,20 @@ export default function TakeDialog({
   onConfirm,
   onCancel,
 }: TakeDialogProps) {
-  const now = new Date();
-  const currentTime = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
-  const [time, setTime] = useState(currentTime);
+  const [time, setTime] = useState(scheduledTime);
+
+  const handleJustTook = () => {
+    const now = new Date();
+    const currentTime = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+    onConfirm(currentTime);
+  };
 
   return (
     <div className="dialog-overlay" onClick={onCancel}>
       <div className="dialog" onClick={(e) => e.stopPropagation()}>
         <h2>Take Medicine</h2>
         <p className="dialog-med-name">{medicineName}</p>
-        <p className="dialog-scheduled">Scheduled: {scheduledTime}</p>
+        <p className="dialog-scheduled">Scheduled: {format12Hour(scheduledTime)}</p>
         <label className="dialog-label">
           Taken at:
           <input
@@ -35,6 +40,9 @@ export default function TakeDialog({
         <div className="dialog-buttons">
           <button className="btn btn-cancel" onClick={onCancel}>
             Cancel
+          </button>
+          <button className="btn btn-take" onClick={handleJustTook}>
+            Just Took
           </button>
           <button className="btn btn-confirm" onClick={() => onConfirm(time)}>
             Confirm

@@ -20,7 +20,7 @@ export interface AuditEntry {
   medicineName: string;
   takeTime: string;
   takeTimestamp: number;
-  status: 'TAKEN' | 'SKIPPED';
+  status: 'TAKEN' | 'SKIPPED' | 'ADDED' | 'REMOVED';
   recordedAt: number; // epoch ms
 }
 
@@ -29,4 +29,11 @@ export interface ExportData {
   exportedAt: string;
   medicines: Medicine[];
   auditTrail: AuditEntry[];
+}
+
+export function format12Hour(time: string): string {
+  const [h, m] = time.split(':').map(Number);
+  const period = h! >= 12 ? 'PM' : 'AM';
+  const hour12 = h! % 12 || 12;
+  return `${hour12}:${String(m).padStart(2, '0')} ${period}`;
 }

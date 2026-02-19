@@ -1,4 +1,5 @@
 import { db } from '../db';
+import { format12Hour } from '../types';
 
 const NOTIFICATION_TAG_PREFIX = 'med-reminder-';
 
@@ -19,7 +20,7 @@ export async function scheduleNotificationsForMedicine(
   medicineId: number,
   medicineName: string,
   times: string[],
-  daysAhead: number = 30
+  daysAhead: number = 20
 ): Promise<void> {
   if (!('Notification' in window) || Notification.permission !== 'granted') return;
 
@@ -40,12 +41,13 @@ export async function scheduleNotificationsForMedicine(
       if (notifyAt <= now) continue;
 
       const delay = notifyAt - now;
+
       const tag = `${NOTIFICATION_TAG_PREFIX}${medicineId}-${day}-${time}`;
 
       // Store timeout ID so we can cancel later
       const timeoutId = window.setTimeout(() => {
         new Notification('Medicine Reminder', {
-          body: `Time to take ${medicineName} (scheduled for ${time})`,
+          body: `Time to take ${medicineName} (scheduled for ${format12Hour(time)})`,
           tag,
           icon: '/pwa-192x192.svg',
           requireInteraction: true,
